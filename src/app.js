@@ -15,13 +15,18 @@ server.get("/", (req, res) => {
     res.send("<h1>Litcoin!</h1>");
 })
 
-//get handler with fetch to get bitcoin values
+//get handler and fetch for today's values
 server.get("/compare", (req, res) => {
-    let currentVal, previousVal;
+    let currentVal;
     fetch("https://api.coindesk.com/v1/bpi/currentprice/XBT.json")
     .then(response => response.json())
-    .then(data => res.json(data));
+    .then(data => {
+        currentVal = data.bpi.USD.rate;
+        res.send(`Today's value is: $${currentVal} USD per Bitcoin`);
+    });
 })
+
+
 
 
 
