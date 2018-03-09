@@ -24,17 +24,21 @@ server.get("/compare", (req, res) => {
     .then(response => response.json())
     .then(data => {
       console.log('first\n', data);
-        currentVal = data.bpi.USD.rate;
+        currentVal = data.bpi.USD.rate_float;
+        currentVal = Math.round(currentVal);
 
       fetch("https://api.coindesk.com/v1/bpi/historical/close.json?for=yesterday")
         .then(response => response.json())
         .then(data => {
-          console.log('second\n', data);
           let value = Object.values(data.bpi);
-          previousVal = typeof value;
-          res.send(`Yestday's value was: $${previousVal} USD per Bitcoin; Today's value is: $${currentVal}`);
+          previousVal = value[0];
+          previousVal = Math.round(previousVal);
+          changeInVal = (currentVal > previousVal) ? currentVal - previousVal : previousVal - currentVal;
+          changeInVal = Math.round(changeInVal);
+          res.send(`Today's value is: $${currentVal} USD per Bitcoin; Yestday's value was: $${previousVal} USD per Bitcoin; In the last 24 hours, the value per Bitcoin has fluctuated $${changeInVal} USD`);
         });
     });
+
 })
 
 
