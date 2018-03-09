@@ -10,9 +10,17 @@ const port = 3000;
 //middleware setup
 server.use(bodyParser.json());
 
-//initial get request for the "/" URL
+//initial get handler for requests to the "/" URL
 server.get("/", (req, res) => {
     res.send("<h1>Litcoin!</h1>");
+})
+
+//get handler with fetch to get bitcoin values
+server.get("/compare", (req, res) => {
+    let currentVal, previousVal;
+    fetch("https://api.coindesk.com/v1/bpi/currentprice/XBT.json")
+    .then(response => response.json())
+    .then(data => res.json(data));
 })
 
 
